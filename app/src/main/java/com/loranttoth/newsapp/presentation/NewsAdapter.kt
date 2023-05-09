@@ -1,5 +1,8 @@
 package com.loranttoth.newsapp.presentation
 
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -8,8 +11,11 @@ import com.bumptech.glide.Glide
 import com.loranttoth.newsapp.R
 import com.loranttoth.newsapp.data.model.New
 import com.loranttoth.newsapp.databinding.NewListItemBinding
+import androidx.core.content.ContextCompat.startActivity
 
-class NewsAdapter(): RecyclerView.Adapter<NewsAdapter.MyViewHolder>() {
+const val EXTRA_NEWS_LINK = "com.loranttoth.gallerysorter.NEWSLINK"
+
+class NewsAdapter(private val context: Context): RecyclerView.Adapter<NewsAdapter.MyViewHolder>() {
     private val newsList = ArrayList<New>()
 
     fun setList(news: List<New>){
@@ -30,7 +36,7 @@ class NewsAdapter(): RecyclerView.Adapter<NewsAdapter.MyViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(newsList[position])
+        holder.bind(newsList[position], context)
     }
 
     override fun getItemCount(): Int {
@@ -41,7 +47,7 @@ class NewsAdapter(): RecyclerView.Adapter<NewsAdapter.MyViewHolder>() {
         RecyclerView.ViewHolder(binding.root){
 
 
-        fun bind(new:New){
+        fun bind(new:New, context: Context){
             binding.titleTextView.text = new.title
             binding.descTextView.text  = new.text
             binding.dateTextView.text = new.publish_date
@@ -51,6 +57,14 @@ class NewsAdapter(): RecyclerView.Adapter<NewsAdapter.MyViewHolder>() {
             Glide.with(binding.imageView.context)
                 .load(posterURL)
                 .into(binding.imageView)
+
+            itemView.setOnClickListener {
+                val newsLink = new.url
+                val intent = Intent(context, WebviewActivity::class.java).apply {
+                    putExtra(EXTRA_NEWS_LINK, newsLink)
+                }
+                startActivity(context, intent, Bundle.EMPTY)
+            }
 
 
         }

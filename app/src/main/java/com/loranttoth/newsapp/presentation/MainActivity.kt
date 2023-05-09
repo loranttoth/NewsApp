@@ -41,9 +41,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun initRecyclerView() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = NewsAdapter()
+        adapter = NewsAdapter(this)
         binding.recyclerView.adapter = adapter
-        displayNews()
+        //displayNews()
+        updateMovies()
     }
 
     private fun displayNews() {
